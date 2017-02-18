@@ -1,3 +1,3 @@
 window.onload = function() {
-  document.body.classList = 'loaded';
+  document.querySelector('.bg').classList += ' loaded';
 }
