@@ -1,0 +1,9 @@
+version: "3"
+services:
+  web:
+    build: web
+    volumes:
+      - ./certs:/etc/nginx/certs
+    ports:
+      - "80:80"
+      - "443:443"
