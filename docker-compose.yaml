@@ -8,47 +8,51 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./certs:/etc/nginx/certs:ro
+      - proxy:/etc/nginx/certs:ro
+      - proxy:/etc/nginx/vhost.d
+      - proxy:/usr/share/nginx/html
       - /var/run/docker.sock:/tmp/docker.sock:ro
     networks:
       - front
       - back
+    labels:
+      - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy=true
     restart: always
 
-  # letsencrypt-companion:
-  #   image: jrcs/letsencrypt-nginx-proxy-companion
-  #   container_name: letsencrypt-companion
-  #   volumes_from:
-  #     - proxy
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock:ro
-  #     - ./proxy/certs:/etc/nginx/certs:rw
-  #   restart: always
+  letsencrypt-companion:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: letsencrypt-companion
+    volumes:
+      - proxy:/etc/nginx/certs
+      - proxy:/etc/nginx/vhost.d
+      - proxy:/usr/share/nginx/html
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: always
 
   web:
     build: web
     environment:
-      - VIRTUAL_HOST=localhost.localdomain
+      - VIRTUAL_HOST=ncoding.at
     networks:
       - back
 
   nextcloud:
     image: nextcloud:11
     environment:
-      - VIRTUAL_HOST=nextcloud.localhost.localdomain
+      - VIRTUAL_HOST=nextcloud.ncoding.at
     links:
       - nextcloud-db:mysql
     networks:
       - back
     volumes:
-      - ./nextcloud/apps:/var/www/html/apps
-      - ./nextcloud/config:/var/www/html/config
-      - ./nextcloud/data:/var/www/html/data
+      - nextcloud-apps:/var/www/html/apps
+      - nextcloud-config:/var/www/html/config
+      - nextcloud-data:/var/www/html/data
 
   nextcloud-db:
     image: mariadb
     volumes:
-      - ./nextcloud/db:/var/lib/mysql
+      - nextcloud-db:/var/lib/mysql
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=true
       - MYSQL_DATABASE=nextcloud
@@ -56,6 +60,18 @@ services:
       - MYSQL_PASSWORD_FILE=./nextcloud/password
     networks:
       - back
+
+volumes:
+  proxy:
+    driver: local
+  nextcloud-apps:
+    driver: local
+  nextcloud-config:
+    driver: local
+  nextcloud-data:
+    driver: local
+  nextcloud-db:
+    driver: local
 
 networks:
   front:
