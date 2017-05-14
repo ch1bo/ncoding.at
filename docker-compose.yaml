@@ -1,9 +1,5 @@
 version: "3"
-networks:
-  front:
-    driver: bridge
-  back:
-    driver: bridge
+
 services:
   proxy:
     image: jwilder/nginx-proxy
@@ -40,20 +36,29 @@ services:
     image: nextcloud:11
     environment:
       - VIRTUAL_HOST=nextcloud.localhost.localdomain
+    links:
+      - nextcloud-db:mysql
+    networks:
+      - back
     volumes:
       - ./nextcloud/apps:/var/www/html/apps
       - ./nextcloud/config:/var/www/html/config
       - ./nextcloud/data:/var/www/html/data
-    links:
-      - db:mysql
+
+  nextcloud-db:
+    image: mariadb
+    volumes:
+      - ./nextcloud/db:/var/lib/mysql
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=true
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD_FILE=./nextcloud/password
     networks:
       - back
 
-  db:
-    image: mariadb
-    volumes:
-      - ./mysql/runtime:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=yE0K36X/mw4248LpcfSdJ1HJJzw=
-    networks:
-      - back
+networks:
+  front:
+    driver: bridge
+  back:
+    driver: bridge
