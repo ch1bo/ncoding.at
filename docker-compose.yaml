@@ -3,38 +3,32 @@ version: "3"
 services:
   proxy:
     image: jwilder/nginx-proxy
-    container_name: proxy
+    volumes:
+      - proxy-certs:/etc/nginx/certs:ro
+      - proxy-vhost:/etc/nginx/vhost.d:ro
+      - proxy-html:/usr/share/nginx/html:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
     ports:
       - 80:80
       - 443:443
-    volumes:
-      - proxy:/etc/nginx/certs:ro
-      - proxy:/etc/nginx/vhost.d
-      - proxy:/usr/share/nginx/html
-      - /var/run/docker.sock:/tmp/docker.sock:ro
     networks:
       - front
       - back
     labels:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy=true
-    restart: always
 
-  letsencrypt-companion:
+  letsencrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion
-    container_name: letsencrypt-companion
     volumes:
-      - proxy:/etc/nginx/certs
-      - proxy:/etc/nginx/vhost.d
-      - proxy:/usr/share/nginx/html
+      - proxy-certs:/etc/nginx/certs
+      - proxy-vhost:/etc/nginx/vhost.d
+      - proxy-html:/usr/share/nginx/html
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    restart: always
     environment:
       - LETSENCRYPT_TEST=true
 
   web:
     build: web
-    volumes:
-      - proxy:/usr/share/nginx/html
     environment:
       - VIRTUAL_HOST=ncoding.at,www.ncoding.at
       - LETSENCRYPT_HOST=ncoding.at,www.ncoding.at
@@ -48,39 +42,41 @@ services:
       - VIRTUAL_HOST=nextcloud.ncoding.at
       - LETSENCRYPT_HOST=nextcloud.ncoding.at
       - LETSENCRYPT_EMAIL=sebastian.nagel@ncoding.at
+    volumes:
+      - nextcloud-apps:/var/www/html/apps
+      - nextcloud-config:/var/www/html/config
+      - nextcloud-data:/var/www/html/data
     links:
       - nextcloud-db:mysql
     networks:
       - back
-    volumes:
-      - proxy:/usr/share/nginx/html
-      - nextcloud-apps:/var/www/html/apps
-      - nextcloud-config:/var/www/html/config
-      - nextcloud-data:/var/www/html/data
 
   nextcloud-db:
     image: mariadb
-    volumes:
-      - nextcloud-db:/var/lib/mysql
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=true
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
-      - MYSQL_PASSWORD_FILE=./nextcloud/password
+    volumes:
+      - nextcloud-db:/var/lib/mysql
     networks:
       - back
 
 volumes:
-  proxy:
+  proxy-certs:
+    driver: local
+  proxy-vhost:
+    driver: local
+  proxy-html:
     driver: local
   nextcloud-apps:
     driver: local
   nextcloud-config:
     driver: local
   nextcloud-data:
-    driver: local
+    external: true
   nextcloud-db:
-    driver: local
+    external: true
 
 networks:
   front:
