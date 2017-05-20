@@ -4,9 +4,9 @@ services:
   proxy:
     image: jwilder/nginx-proxy
     volumes:
-      - proxy-certs:/etc/nginx/certs:ro
-      - proxy-vhost:/etc/nginx/vhost.d:ro
-      - proxy-html:/usr/share/nginx/html:ro
+      - /mnt/docker/certs:/etc/nginx/certs:ro
+      - /mnt/docker/vhost.d:/etc/nginx/vhost.d:ro
+      - /mnt/docker/html:/usr/share/nginx/html:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
     ports:
       - 80:80
@@ -20,9 +20,9 @@ services:
   letsencrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion
     volumes:
-      - proxy-certs:/etc/nginx/certs
-      - proxy-vhost:/etc/nginx/vhost.d
-      - proxy-html:/usr/share/nginx/html
+      - /mnt/docker/certs:/etc/nginx/certs
+      - /mnt/docker/vhost.d:/etc/nginx/vhost.d
+      - /mnt/docker/html:/usr/share/nginx/html
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       - LETSENCRYPT_TEST=true
@@ -36,6 +36,36 @@ services:
     networks:
       - back
 
+  mail:
+    image: tvial/docker-mailserver:2.1
+    domainname: mail.ncoding.at
+    ports:
+      - "25:25"
+      - "143:143"
+      - "587:587"
+      - "993:993"
+    volumes:
+      - /mnt/docker/mail/data:/var/mail
+      - /mnt/docker/mail/state:/var/mail-state
+      - /mnt/docker/mail/config:/tmp/docker-mailserver
+      - /mnt/docker/certs:/etc/ssl:ro
+    environment:
+      - ENABLE_SPAMASSASSIN=1
+      - ENABLE_CLAMAV=1
+      - ENABLE_FAIL2BAN=1
+      - ONE_DIR=1
+      - SSL_TYPE=manual
+      - SSL_CERT_PATH=/etc/ssl/mail.ncoding.at.crt
+      - SSL_KEY_PATH=/etc/ssl/mail.ncoding.at.key
+      - DMS_DEBUG=1
+      - VIRTUAL_HOST=mail.ncoding.at # TODO(SN): roundcube/rainloop should use this
+      - LETSENCRYPT_HOST=mail.ncoding.at
+      - LETSENCRYPT_EMAIL=sebastian.nagel@ncoding.at
+    cap_add:
+      - NET_ADMIN # fail2ban
+    networks:
+      - front
+
   nextcloud:
     image: nextcloud:11
     environment:
@@ -43,40 +73,22 @@ services:
       - LETSENCRYPT_HOST=nextcloud.ncoding.at
       - LETSENCRYPT_EMAIL=sebastian.nagel@ncoding.at
     volumes:
-      - nextcloud-apps:/var/www/html/apps
-      - nextcloud-config:/var/www/html/config
-      - nextcloud-data:/var/www/html/data
+      - /mnt/docker/nextcloud/apps:/var/www/html/apps
+      - /mnt/docker/nextcloud/config:/var/www/html/config
+      - /mnt/docker/nextcloud/data:/var/www/html/data
     links:
-      - nextcloud-db:mysql
+      - db:mysql
     networks:
       - back
 
-  nextcloud-db:
+  db:
     image: mariadb
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=true
-      - MYSQL_DATABASE=nextcloud
-      - MYSQL_USER=nextcloud
     volumes:
-      - nextcloud-db:/var/lib/mysql
+      - /mnt/docker/db:/var/lib/mysql
     networks:
       - back
-
-volumes:
-  proxy-certs:
-    driver: local
-  proxy-vhost:
-    driver: local
-  proxy-html:
-    driver: local
-  nextcloud-apps:
-    driver: local
-  nextcloud-config:
-    driver: local
-  nextcloud-data:
-    external: true
-  nextcloud-db:
-    external: true
 
 networks:
   front:
