@@ -3,14 +3,17 @@ version: "3"
 services:
   proxy:
     image: jwilder/nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
     volumes:
       - /mnt/docker/certs:/etc/nginx/certs:ro
       - /mnt/docker/vhost.d:/etc/nginx/vhost.d:ro
       - /mnt/docker/html:/usr/share/nginx/html:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
-    ports:
-      - 80:80
-      - 443:443
+    environment:
+      - LETSENCRYPT_HOST=ncoding.at,www.ncoding.at
+      - LETSENCRYPT_EMAIL=sebastian.nagel@ncoding.at
     networks:
       - front
       - back
@@ -31,8 +34,6 @@ services:
     build: web
     environment:
       - VIRTUAL_HOST=ncoding.at,www.ncoding.at
-      - LETSENCRYPT_HOST=ncoding.at,www.ncoding.at
-      - LETSENCRYPT_EMAIL=sebastian.nagel@ncoding.at
     networks:
       - back
 
@@ -42,7 +43,7 @@ services:
     ports:
       - "25:25"
       - "143:143"
-      - "587:587"
+      - "587:587" # TODO(SN): port-forward missing
       - "993:993"
     volumes:
       - /mnt/docker/mail/data:/var/mail
@@ -58,13 +59,24 @@ services:
       - SSL_CERT_PATH=/etc/ssl/mail.ncoding.at.crt
       - SSL_KEY_PATH=/etc/ssl/mail.ncoding.at.key
       - DMS_DEBUG=1
-      - VIRTUAL_HOST=mail.ncoding.at # TODO(SN): roundcube/rainloop should use this
       - LETSENCRYPT_HOST=mail.ncoding.at
       - LETSENCRYPT_EMAIL=sebastian.nagel@ncoding.at
     cap_add:
       - NET_ADMIN # fail2ban
     networks:
       - front
+      - back
+
+  webmail:
+    image: runningman84/rainloop
+    volumes:
+      - /mnt/docker/rainloop:/var/www/html/data
+    environment:
+      - VIRTUAL_HOST=mail.ncoding.at
+      - PHP_MAX_POST_SIZE=256M
+      - PHP_MAX_UPLOAD_SIZE=128M
+    networks:
+      - back
 
   nextcloud:
     image: nextcloud:11
