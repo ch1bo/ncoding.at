@@ -39,7 +39,8 @@ services:
 
   mail:
     image: tvial/docker-mailserver:2.1
-    domainname: mail.ncoding.at
+    domainname: ncoding.at
+    hostname: mail
     ports:
       - "25:25"
       - "143:143"
