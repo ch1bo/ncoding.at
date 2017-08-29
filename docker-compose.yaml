@@ -38,7 +38,7 @@ services:
       - back
 
   mail:
-    image: tvial/docker-mailserver:2.1
+    image: tvial/docker-mailserver
     domainname: ncoding.at
     hostname: mail
     ports:
