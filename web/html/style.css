@@ -1,7 +1,8 @@
-@import url('https://fonts.googleapis.com/css?family=Lato');
+@import url('https://fonts.googleapis.com/css?family=Fira+Sans');
 
 * {
   box-sizing: border-box;
+  font-family: 'Fira Sans', sans-serif;
 }
 
 html, body {
@@ -9,43 +10,29 @@ html, body {
   margin: 0;
 }
 
-html {
-  font-family: 'Lato', sans-serif;
-  background: black;
-}
-
 body {
   display: flex;
   justify-content: center;
   align-items: center;
+  background: #344557 url(austria-tyrol.jpg) 0 0 no-repeat;
+  background-size: cover;
 }
 
-.bg {
-  position: fixed;
-  top: 0;
+body::after {
+  content: '';
+  background: hsla(227, 17%, 38%, 0.75);
+  position: absolute;
   left: 0;
-
-  min-width: 100%;
-  min-height: 100%;
-  background: url('https://static.pexels.com/photos/25316/pexels-photo-25316.jpg') no-repeat fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-
-  opacity: 0;
-  transition: opacity 1s;
+  right: 0;
+  bottom: 0;
+  top: 0;
 }
 
 @media screen and (min-width: 512px) {
   .bg {
-    -webkit-background-position: center center;
+    background-position: center center;
     background-position: center center;
   }
-}
-
-.bg.loaded {
-  opacity: 1;
 }
 
 h2, h3 {
@@ -58,12 +45,13 @@ h3 {
   margin-bottom: 30px;
 }
 
-hr {
-  margin: 30px;
+svg {
+  height: 100%;
+  width: auto;
 }
 
 .content {
-  width: 400px;
+  width: 670px;
   padding: 30px;
   color: white;
   z-index: 1;
@@ -72,8 +60,75 @@ hr {
 .profiles {
   display: flex;
   justify-content: space-between;
+
+  --button-height: 50px;
+  --button-width: 120px;
 }
 
 .profiles img {
   height: 24px;
+}
+
+.profiles button {
+  background: none;
+  border: 0;
+  height: var(--button-height);
+  width: var(--button-width);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.profiles button a {
+  flex: 1;
+  text-decoration: none;
+  font-size: 20px;
+  color: white;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.profiles button a i {
+  margin-right: 5px;
+}
+.profiles button:hover::after {
+  content: '';
+  position: absolute;
+  height: var(--button-height);
+  width: var(--button-width);
+  background: linear-gradient(120deg, #6559ae, #ff7159, #6559ae);
+  background-size: 400% 400%;
+  -webkit-clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 116px 4px, 116px 46px, 4px 46px, 4px 100%, 100% 100%, 100% 0%, 0% 0%);
+  -moz-animation: gradient 3s ease-in-out infinite, button-border 1s forwards ease-in-out reverse;
+  -webkit-animation: gradient 3s ease-in-out infinite, button-border 1s forwards ease-in-out reverse;
+  animation: gradient 3s ease-in-out infinite, button-border 1s forwards ease-in-out reverse;
+}
+@keyframes gradient {
+  0% {
+    background-position: 14% 0%;
+  }
+  50% {
+    background-position: 87% 100%;
+  }
+  100% {
+    background-position: 14% 0%;
+  }
+}
+@keyframes button-border {
+  0% {
+    clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 116px 4px, 116px 46px, 4px 46px, 4px 100%, 100% 100%, 100% 0%, 0% 0%);
+  }
+  25% {
+    clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 116px 4px, 116px 46px, 116px 46px, 116px 100%, 100% 100%, 100% 0%, 0% 0%);
+  }
+  50% {
+    clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 116px 4px, 116px 4px, 116px 4px, 116px 4px, 116px 4px, 100% 0%, 0% 0%);
+  }
+  75% {
+    clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 4px 4px, 4px 4px, 4px 4px, 4px 4px, 4px 4px, 4px 0%, 0% 0%);
+  }
+  100% {
+    clip-path: polygon(0% 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 0% 100%);
+  }
 }
