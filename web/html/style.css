@@ -14,8 +14,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #344557 url(austria-tyrol.jpg) 0 0 no-repeat;
-  background-size: cover;
+  background: #344557;
 }
 
 body::after {
@@ -28,12 +27,18 @@ body::after {
   top: 0;
 }
 
-@media screen and (min-width: 512px) {
-  .bg {
-    background-position: center center;
-    background-position: center center;
-  }
+.bg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background: #344557 url(austria-tyrol-64.jpg) 0 0 no-repeat;
+  background-size: cover;
+  background-position: center center;
+  filter: blur(20px);
 }
+
 
 h2, h3 {
   margin-top: 0;
@@ -105,6 +110,14 @@ svg {
   -moz-animation: gradient 3s ease-in-out infinite, button-border 0.5s forwards ease-in-out reverse;
   -webkit-animation: gradient 3s ease-in-out infinite, button-border 0.5s forwards ease-in-out reverse;
   animation: gradient 3s ease-in-out infinite, button-border 0.5s forwards ease-in-out reverse;
+}
+@keyframes sharpen {
+  from {
+    background-image: filter(austria-tyrol.jpg), blur(20px));
+  }
+  to {
+    background-image: filter(austria-tyrol.jpg), blur(0px));
+  }
 }
 @keyframes gradient {
   0% {
