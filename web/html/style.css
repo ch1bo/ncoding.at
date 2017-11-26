@@ -51,7 +51,8 @@ svg {
 }
 
 .content {
-  width: 670px;
+  width: 100%;
+  max-width: 450px;
   padding: 30px;
   color: white;
   z-index: 1;
@@ -60,9 +61,6 @@ svg {
 .profiles {
   display: flex;
   justify-content: space-between;
-
-  --button-height: 50px;
-  --button-width: 120px;
 }
 
 .profiles img {
@@ -72,8 +70,8 @@ svg {
 .profiles button {
   background: none;
   border: 0;
-  height: var(--button-height);
-  width: var(--button-width);
+  height: 50px;
+  width: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -89,20 +87,24 @@ svg {
   justify-content: center;
   align-items: center;
 }
+.profiles button a:hover {
+  color: #6559ae;
+  animation: color 1.5s ease-in-out infinite;
+}
 .profiles button a i {
   margin-right: 5px;
 }
 .profiles button:hover::after {
   content: '';
   position: absolute;
-  height: var(--button-height);
-  width: var(--button-width);
+  height: 50px;
+  width: 100px;
   background: linear-gradient(120deg, #6559ae, #ff7159, #6559ae);
   background-size: 400% 400%;
-  -webkit-clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 116px 4px, 116px 46px, 4px 46px, 4px 100%, 100% 100%, 100% 0%, 0% 0%);
-  -moz-animation: gradient 3s ease-in-out infinite, button-border 1s forwards ease-in-out reverse;
-  -webkit-animation: gradient 3s ease-in-out infinite, button-border 1s forwards ease-in-out reverse;
-  animation: gradient 3s ease-in-out infinite, button-border 1s forwards ease-in-out reverse;
+  -webkit-clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 96px 4px, 96px 46px, 4px 46px, 4px 100%, 100% 100%, 100% 0%, 0% 0%);
+  -moz-animation: gradient 3s ease-in-out infinite, button-border 0.5s forwards ease-in-out reverse;
+  -webkit-animation: gradient 3s ease-in-out infinite, button-border 0.5s forwards ease-in-out reverse;
+  animation: gradient 3s ease-in-out infinite, button-border 0.5s forwards ease-in-out reverse;
 }
 @keyframes gradient {
   0% {
@@ -115,15 +117,26 @@ svg {
     background-position: 14% 0%;
   }
 }
-@keyframes button-border {
+@keyframes color {
   0% {
-    clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 116px 4px, 116px 46px, 4px 46px, 4px 100%, 100% 100%, 100% 0%, 0% 0%);
-  }
-  25% {
-    clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 116px 4px, 116px 46px, 116px 46px, 116px 100%, 100% 100%, 100% 0%, 0% 0%);
+    color: #8c5f98;
   }
   50% {
-    clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 116px 4px, 116px 4px, 116px 4px, 116px 4px, 116px 4px, 100% 0%, 0% 0%);
+    color: #f06f62;
+  }
+  100% {
+    color: #8c5f98;
+  }
+}
+@keyframes button-border {
+  0% {
+    clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 96px 4px, 96px 46px, 4px 46px, 4px 100%, 100% 100%, 100% 0%, 0% 0%);
+  }
+  25% {
+    clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 96px 4px, 96px 46px, 96px 46px, 96px 100%, 100% 100%, 100% 0%, 0% 0%);
+  }
+  50% {
+    clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 96px 4px, 96px 4px, 96px 4px, 96px 4px, 96px 4px, 100% 0%, 0% 0%);
   }
   75% {
     clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 4px 4px, 4px 4px, 4px 4px, 4px 4px, 4px 4px, 4px 0%, 0% 0%);
