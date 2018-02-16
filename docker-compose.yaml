@@ -19,6 +19,7 @@ services:
       - back
     labels:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy=true
+    restart: always
 
   letsencrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion
@@ -29,6 +30,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       - LETSENCRYPT_TEST=true
+    restart: always
 
   web:
     build: web
@@ -36,9 +38,10 @@ services:
       - VIRTUAL_HOST=ncoding.at,www.ncoding.at
     networks:
       - back
+    restart: always
 
   mail:
-    image: tvial/docker-mailserver
+    image: tvial/docker-mailserver:2.3
     domainname: ncoding.at
     hostname: mail
     ports:
@@ -52,6 +55,7 @@ services:
       - /mnt/docker/mail/config:/tmp/docker-mailserver
       - /mnt/docker/certs:/etc/ssl:ro
     environment:
+      - DMS_DEBUG=1
       - ENABLE_SPAMASSASSIN=1
       - ENABLE_CLAMAV=1
       - ENABLE_FAIL2BAN=1
@@ -59,7 +63,6 @@ services:
       - SSL_TYPE=manual
       - SSL_CERT_PATH=/etc/ssl/mail.ncoding.at.crt
       - SSL_KEY_PATH=/etc/ssl/mail.ncoding.at.key
-      - DMS_DEBUG=1
       - LETSENCRYPT_HOST=mail.ncoding.at
       - LETSENCRYPT_EMAIL=sebastian.nagel@ncoding.at
     cap_add:
@@ -67,6 +70,7 @@ services:
     networks:
       - front
       - back
+    restart: always
 
   webmail:
     image: runningman84/rainloop
@@ -78,6 +82,7 @@ services:
       - PHP_MAX_UPLOAD_SIZE=128M
     networks:
       - back
+    restart: always
 
   nextcloud:
     image: nextcloud:11
@@ -93,6 +98,7 @@ services:
       - db:mysql
     networks:
       - back
+    restart: always
 
   db:
     image: mariadb
@@ -102,6 +108,22 @@ services:
       - /mnt/docker/db:/var/lib/mysql
     networks:
       - back
+    restart: always
+
+  ftp:
+    image: stilliard/pure-ftpd
+    ports:
+      - "21:21"
+    environment:
+      - PUBLICHOST=ftp.ncoding.at
+    volumes:
+      - /mnt/docker/ftp/data:/home/ftpusers
+      - /mnt/docker/ftp/config:/etc/pure-ftpd/passwd
+      - /mnt/docker/ftp/state:/etc/pure-ftpd
+    networks:
+      - front
+    privileged: true
+    restart: always
 
 networks:
   front:
