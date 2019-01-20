@@ -1,5 +1,4 @@
 version: "3"
-
 services:
   proxy:
     build: proxy
@@ -29,7 +28,7 @@ services:
       - /mnt/docker/html:/usr/share/nginx/html
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
-      - LETSENCRYPT_TEST=true
+      - NGINX_PROXY_CONTAINER=proxy
     restart: always
 
   web:
@@ -85,7 +84,7 @@ services:
     restart: always
 
   nextcloud:
-    image: nextcloud:11
+    image: nextcloud:14
     environment:
       - VIRTUAL_HOST=nextcloud.ncoding.at
       - LETSENCRYPT_HOST=nextcloud.ncoding.at
