@@ -109,20 +109,32 @@ services:
       - back
     restart: always
 
-  ftp:
-    image: stilliard/pure-ftpd
+  samba:
+    image: dperson/samba
     ports:
-      - "21:21"
-    environment:
-      - PUBLICHOST=ftp.ncoding.at
-    volumes:
-      - /mnt/docker/ftp/data:/home/ftpusers
-      - /mnt/docker/ftp/config:/etc/pure-ftpd/passwd
-      - /mnt/docker/ftp/state:/etc/pure-ftpd
+      - "139:139"
+      - "445:445"
     networks:
       - front
-    privileged: true
+    volumes:
+      - /mnt/docker/samba:/srv
     restart: always
+    command: -p -u "camera;camera14ckn" -s "camera-willi;/samba/camera-willi;yes;no;no;camera" -s "camera-stiege;/samba/camera-stiege;yes;no;no;camera" -g "log level = 2\n   ntlm auth = yes" -S
+
+  #ftp:
+  #  image: stilliard/pure-ftpd
+  #  ports:
+  #    - "21:21"
+  #  environment:
+  #    - PUBLICHOST=ftp.ncoding.at
+  #  volumes:
+  #    - /mnt/docker/ftp/data:/home/ftpusers
+  #    - /mnt/docker/ftp/config:/etc/pure-ftpd/passwd
+  #    - /mnt/docker/ftp/state:/etc/pure-ftpd
+  #  networks:
+  #    - front
+  #  privileged: true
+  #  restart: always
 
 networks:
   front:
