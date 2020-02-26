@@ -84,7 +84,7 @@ services:
     restart: always
 
   nextcloud:
-    image: nextcloud:14
+    image: nextcloud:stable
     environment:
       - VIRTUAL_HOST=nextcloud.ncoding.at
       - LETSENCRYPT_HOST=nextcloud.ncoding.at
