@@ -84,17 +84,19 @@ services:
     restart: always
 
   nextcloud:
-    image: nextcloud:stable
+    image: nextcloud:18
     environment:
       - VIRTUAL_HOST=nextcloud.ncoding.at
       - LETSENCRYPT_HOST=nextcloud.ncoding.at
       - LETSENCRYPT_EMAIL=sebastian.nagel@ncoding.at
+      - REDIS_HOST=redis
     volumes:
       - /mnt/docker/nextcloud/apps:/var/www/html/apps
       - /mnt/docker/nextcloud/config:/var/www/html/config
       - /mnt/docker/nextcloud/data:/var/www/html/data
     links:
       - db:mysql
+      - redis:redis
     networks:
       - back
     restart: always
@@ -105,6 +107,12 @@ services:
       - MYSQL_RANDOM_ROOT_PASSWORD=true
     volumes:
       - /mnt/docker/db:/var/lib/mysql
+    networks:
+      - back
+    restart: always
+
+  redis:
+    image: redis
     networks:
       - back
     restart: always
