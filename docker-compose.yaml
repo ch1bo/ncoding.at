@@ -127,24 +127,18 @@ services:
     restart: always
     command: -p -u "camera;camera14ckn" -s "camera-willi;/samba/camera-willi;yes;no;no;camera" -s "camera-stiege;/samba/camera-stiege;yes;no;no;camera" -g "log level = 2\n   ntlm auth = yes" -S
 
-  gitlab:
-    image: 'gitlab/gitlab-ce:latest'
-    hostname: 'gitlab.ncoding.at'
+  gogs:
+    image: gogs/gogs:0.11.91
     environment:
-      VIRTUAL_HOST: gitlab.ncoding.at
-      LETSENCRYPT_HOST: gitlab.ncoding.at
-      GITLAB_OMNIBUS_CONFIG: |
-        external_url 'https://gitlab.ncoding.at
-        # Add any other gitlab.rb configuration here, each on its own line
+      - VIRTUAL_HOST=gogs.ncoding.at
+      - VIRTUAL_PORT=3000
+      - LETSENCRYPT_HOST=gogs.ncoding.at
     ports:
-      - '2222:22'
+      - "2222:22"
     networks:
       - back
     volumes:
-      - '$GITLAB_HOME/gitlab/config:/etc/gitlab'
-      - '$GITLAB_HOME/gitlab/logs:/var/log/gitlab'
-      - '$GITLAB_HOME/gitlab/data:/var/opt/gitlab'
-    restart: always
+      - /mnt/docker/gogs:/data
 
   #ftp:
   #  image: stilliard/pure-ftpd
