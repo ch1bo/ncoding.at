@@ -133,8 +133,8 @@ services:
       - VIRTUAL_HOST=gogs.ncoding.at
       - VIRTUAL_PORT=3000
       - LETSENCRYPT_HOST=gogs.ncoding.at
-    ports:
-      - "2222:22"
+      - PUID=1002
+      - PGID=1002
     networks:
       - back
     volumes:
