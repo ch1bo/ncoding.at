@@ -12,7 +12,6 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
     environment:
       - LETSENCRYPT_HOST=ncoding.at,www.ncoding.at
-      - LETSENCRYPT_EMAIL=sebastian.nagel@ncoding.at
     networks:
       - front
       - back
@@ -21,7 +20,7 @@ services:
     restart: always
 
   letsencrypt:
-    image: jrcs/letsencrypt-nginx-proxy-companion
+    image: jrcs/letsencrypt-nginx-proxy-companion:latest
     volumes:
       - /mnt/docker/certs:/etc/nginx/certs
       - /mnt/docker/vhost.d:/etc/nginx/vhost.d
@@ -29,6 +28,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       - NGINX_PROXY_CONTAINER=proxy
+      - DEFAULT_EMAIL=sebastian.nagel@ncoding.at
     restart: always
 
   web:
@@ -63,7 +63,6 @@ services:
       - SSL_CERT_PATH=/etc/ssl/mail.ncoding.at.crt
       - SSL_KEY_PATH=/etc/ssl/mail.ncoding.at.key
       - LETSENCRYPT_HOST=mail.ncoding.at
-      - LETSENCRYPT_EMAIL=sebastian.nagel@ncoding.at
     cap_add:
       - NET_ADMIN # fail2ban
     networks:
@@ -72,7 +71,7 @@ services:
     restart: always
 
   webmail:
-    image: runningman84/rainloop
+    image: runningman84/rainloop:latest
     volumes:
       - /mnt/docker/rainloop:/var/www/html/data
     environment:
@@ -88,7 +87,6 @@ services:
     environment:
       - VIRTUAL_HOST=nextcloud.ncoding.at
       - LETSENCRYPT_HOST=nextcloud.ncoding.at
-      - LETSENCRYPT_EMAIL=sebastian.nagel@ncoding.at
       - REDIS_HOST=redis
     volumes:
       - /mnt/docker/nextcloud/apps:/var/www/html/apps
@@ -102,7 +100,7 @@ services:
     restart: always
 
   db:
-    image: mariadb
+    image: mariadb:10.4
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=true
     volumes:
@@ -118,7 +116,7 @@ services:
     restart: always
 
   samba:
-    image: dperson/samba
+    image: dperson/samba:latest
     ports:
       - "139:139"
       - "445:445"
