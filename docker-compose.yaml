@@ -125,7 +125,7 @@ services:
     networks:
       - front
     volumes:
-      - /mnt/docker/samba:/srv
+      - /mnt/docker/samba:/samba
     restart: always
     command: -p -u "camera;camera14ckn" -s "camera-willi;/samba/camera-willi;yes;no;no;camera" -s "camera-stiege;/samba/camera-stiege;yes;no;no;camera" -g "log level = 2\n   ntlm auth = yes" -S
 
