@@ -127,7 +127,7 @@ services:
       - /mnt/docker/samba:/samba
     restart: always
     # NOTE(SN) mutates container and compose might not re-create properly
-    command: -p -u "camera;camera14ckn" -s "camera-willi;/samba/camera-willi;yes;no;no;camera" -s "camera-stiege;/samba/camera-stiege;yes;no;no;camera" -g "log level = 2" -g "ntlm auth = yes" -S
+    command: -p -u "camera;camera14ckn" -s "camera-willi;/samba/camera-willi;yes;no;no;camera" -s "camera-stiege;/samba/camera-stiege;yes;no;no;camera" -g "log level = 2" -g "ntlm auth = yes" -g "server schannel = yes" -S
 
   gogs:
     image: gogs/gogs:0.11.91
