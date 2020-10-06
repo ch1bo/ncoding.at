@@ -83,11 +83,12 @@ services:
     restart: always
 
   nextcloud:
-    image: nextcloud:18
+    image: nextcloud:19
     environment:
       - VIRTUAL_HOST=nextcloud.ncoding.at
       - LETSENCRYPT_HOST=nextcloud.ncoding.at
       - REDIS_HOST=redis
+      - OVERWRITEPROTOCOL=https
     volumes:
       - /mnt/docker/nextcloud/apps:/var/www/html/apps
       - /mnt/docker/nextcloud/config:/var/www/html/config
