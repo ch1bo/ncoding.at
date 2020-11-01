@@ -4,19 +4,18 @@ services:
     build: proxy
     ports:
       - "80:80"
-      - "443:443"
     volumes:
       - /mnt/docker/certs:/etc/nginx/certs:ro
       - /mnt/docker/vhost.d:/etc/nginx/vhost.d:ro
       - /mnt/docker/html:/usr/share/nginx/html:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
-    environment:
-      - LETSENCRYPT_HOST=ncoding.at,www.ncoding.at
     networks:
       - front
       - back
     labels:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy=true
+    environment:
+      - HTTPS_METHOD=noredirect
     restart: always
 
   letsencrypt:
