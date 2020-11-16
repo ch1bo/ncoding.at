@@ -39,13 +39,14 @@ services:
     restart: always
 
   mail:
-    image: tvial/docker-mailserver:2.3
+    image: tvial/docker-mailserver:release-v7.1.0
     domainname: ncoding.at
     hostname: mail
     ports:
       - "25:25"
       - "143:143"
-      - "587:587" # TODO(SN): port-forward missing
+      - "465:465"
+      - "587:587"
       - "993:993"
     volumes:
       - /mnt/docker/mail/data:/var/mail
@@ -55,8 +56,14 @@ services:
     environment:
       - DMS_DEBUG=1
       - ENABLE_SPAMASSASSIN=1
+      - SPAMASSASSIN_SPAM_TO_INBOX=1
+      - MOVE_SPAM_TO_JUNK=1
+      - SA_TAG=1 # Add header
+      - SA_TAG2=3 # Add to subject
+      - SA_KILL=5.9 # Move to Junk
+      - SA_SPAM_SUBJECT=[SPAM]
       - ENABLE_CLAMAV=1
-      - ENABLE_FAIL2BAN=1
+      - ENABLE_FAIL2BAN=0
       - ONE_DIR=1
       - SSL_TYPE=manual
       - SSL_CERT_PATH=/etc/ssl/mail.ncoding.at.crt
