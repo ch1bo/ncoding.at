@@ -13,7 +13,7 @@ function animate(duration, fn) {
 }
 
 window.addEventListener('load', function() {
-  var url = 'austria-tyrol.jpg'
+  var url = 'wallis.jpg'
   var img = new Image()
   img.onload = function() {
     var bg = document.querySelector('.bg')

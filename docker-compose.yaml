@@ -2,8 +2,11 @@ version: "3"
 services:
   proxy:
     build: proxy
+    environment:
+      - HTTPS_METHOD=noredirect
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - /mnt/docker/certs:/etc/nginx/certs:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
@@ -21,7 +24,7 @@ services:
     restart: always
 
   mail:
-    image: tvial/docker-mailserver:release-v7.1.0
+    image: docker.io/mailserver/docker-mailserver:8.0.1
     domainname: ncoding.at
     hostname: mail
     ports:
