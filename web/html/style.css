@@ -14,7 +14,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #344557;
 }
 
 body::after {
@@ -40,14 +39,18 @@ body::after {
 }
 
 
-h2, h3 {
+h2, h3, h4 {
   margin-top: 0;
   margin-bottom: 15px;
   text-align: center;
 }
 
 h3 {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
+}
+
+h4 {
+  margin-top: 20px;
 }
 
 svg {
@@ -59,8 +62,14 @@ svg {
   width: 100%;
   max-width: 450px;
   padding: 30px;
-  color: white;
+  color: #e4e0ff;
   z-index: 1;
+  position: relative;
+  border-radius: 5px;
+
+  /* Frosted glass effect */
+  background-color: rgba(255, 255, 255, .15);
+  backdrop-filter: blur(10px);
 }
 
 .profiles {

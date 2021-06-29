@@ -20,7 +20,7 @@ window.addEventListener('load', function() {
     bg.style.backgroundImage = 'url(' + url + ')'
     var duration = 500
     animate(duration, function(time) {
-      var blur = Math.max(Math.abs((duration-time)/duration*20), 0)
+      var blur = Math.floor(Math.abs((duration-time)/duration*20), 0)
       bg.style.filter = 'blur(' + blur  + 'px)'
     })
   }
